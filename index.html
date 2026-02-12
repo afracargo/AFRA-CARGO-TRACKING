@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Logistics Tracker</title>
+    <style>
+        :root { --primary: #007bff; --success: #28a745; --gray: #e9ecef; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        h2 { color: #333; margin-bottom: 1.5rem; text-align: center; }
+        .search-group { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+        input { flex: 1; padding: 12px; border: 2px solid var(--gray); border-radius: 6px; outline: none; }
+        button { padding: 12px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        
+        /* Result Section */
+        #result { display: none; margin-top: 1.5rem; border-top: 1px solid var(--gray); padding-top: 1.5rem; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; background: #d1ecf1; color: #0c5460; margin-bottom: 10px; }
+        
+        /* Progress Bar */
+        .progress-track { background: var(--gray); height: 8px; border-radius: 4px; margin: 20px 0; position: relative; }
+        .progress-fill { background: var(--success); height: 100%; width: 0%; border-radius: 4px; transition: width 0.8s ease-in-out; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>📦 Local Express Tracker</h2>
+    <div class="search-group">
+        <input type="text" id="trackingID" placeholder="Enter ID (Try: LX101, LX102)">
+        <button onclick="trackPackage()">Track</button>
+    </div>
+
+    <div id="result">
+        <div id="badge" class="status-badge">Processing</div>
+        <p><strong>Package ID:</strong> <span id="resID"></span></p>
+        <p><strong>Current Location:</strong> <span id="resLoc"></span></p>
+        
+        <div class="progress-track">
+            <div id="progressBar" class="progress-fill"></div>
+        </div>
+        <p style="font-size: 0.8rem; color: #666; text-align: center;" id="resNote"></p>
+    </div>
+</div>
+
+<script>
+    // Your simulated "Database"
+    const db = [
+        { id: "LX101", status: "In Transit", location: "Lagos Hub", progress: 65, note: "Departed sorting facility." },
+        { id: "LX102", status: "Delivered", location: "Ikeja, Lagos", progress: 100, note: "Handed to resident." },
+        { id: "LX103", status: "Processing", location: "Port Harcourt", progress: 15, note: "Order being prepared." }
+    ];
+
+    function trackPackage() {
+        const query = document.getElementById('trackingID').value.toUpperCase();
+        const pkg = db.find(item => item.id === query);
+        const resDiv = document.getElementById('result');
+
+        if (pkg) {
+            resDiv.style.display = 'block';
+            document.getElementById('resID').innerText = pkg.id;
+            document.getElementById('resLoc').innerText = pkg.location;
+            document.getElementById('badge').innerText = pkg.status;
+            document.getElementById('resNote').innerText = pkg.note;
+            document.getElementById('progressBar').style.width = pkg.progress + "%";
+        } else {
+            alert("Package not found! Please check your ID.");
+            resDiv.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
